@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+<div id="legend"></div>
+<div class="map" id="mapl">
+<span style="padding-left: 100px;">2006-2010</span>
+</div>
+<div class="map" id="mapr">
+<span style="padding-left: 100px;">2011-2015</span>
+</div>
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/geo.js') }}"></script>
+{% endblock %}

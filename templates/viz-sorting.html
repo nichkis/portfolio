@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% block content %}
+<section id="sort-nav">
+  <div><span class="sort-nav-text" id="nav-insertion">insertion</span></div>
+  <div><span class="sort-nav-text" id="nav-merge">merge</span></div>
+  <div><span class="sort-nav-text" id="nav-quick">quick</span></div>
+</section>
+<div id="sort-viz"></div>
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/color-sort.js') }}"></script>
+{% endblock %}
