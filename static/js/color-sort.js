@@ -12,18 +12,10 @@ while (start < 330) {
 shuffle();
 
 svg.append("line")
-  .attr("id", "left-line")
+  .attr("id", "center")
   .attr("x1", sortType[currSortType])
   .attr("y1", 10)
-  .attr("x2", 10)
-  .attr("y2", 130)
-  .style("stroke", "black");
-
-svg.append("line")
-  .attr("id", "right-line")
-  .attr("x1", sortType[currSortType])
-  .attr("y1", 10)
-  .attr("x2", (getWidth() - 10))
+  .attr("x2", (getWidth() / 2))
   .attr("y2", 130)
   .style("stroke", "black");
 
@@ -84,27 +76,6 @@ d3.select("#nav-merge").on("click", function () {
               return "hsl(" + d + ",100%,60%)";
             });
   merge();
-});
-
-d3.select("#nav-quick").on("click", function () {
-  clearInterval(animate);
-  svg.selectAll("rect").remove();
-  currSortType = 'quick';
-  svg.selectAll("line")
-    .transition()
-    .duration(1000)
-    .attr("x1", sortType[currSortType]);
-  shuffle();
-  rects = svg.selectAll('rect').data(colorArr).enter().append('rect')
-            .attr('width', rectWidth)
-            .attr('height', 10)
-            .attr('transform', function (d, i) {
-              return 'translate(' + (10 + (rectWidth * i)) + ',140)';
-            })
-            .style("fill", function (d) {
-              return "hsl(" + d + ",100%,60%)";
-            });
-  quick();
 });
 
 function shuffle() {
@@ -209,61 +180,10 @@ function merge () {
   }
 }
 
-function quick () {
-  var passes = [];
-  var depthDict = {};
-
-  divide(colorArr, 0, colorArr.length-1, 0);
-
-  for (var key in depthDict) {
-    passes.push(depthDict[key]);
-  }
-
-  animate = setInterval(function () {
-    var pass = passes.pop();
-    if (pass) {
-      rects.data(pass, Number)
-        .transition()
-        .duration(500)
-        .attr('transform', function (d, i) {
-          return 'translate(' + (10 + (rectWidth * i)) + ',140)';
-        });
-    } else {
-      clearInterval(animate);
-    }
-  }, 500);
-
-  function divide (data, lo, hi, depth) {
-    if (lo < hi) {
-      var p = partition(data, lo, hi);
-      divide(data, lo, p-1, depth+1);
-      divide(data, p+1, hi, depth+1);
-    }
-  }
-
-  function partition (data, lo, hi) {
-    var pivot = data[hi],
-        i = lo;
-    for (var j = lo; j < hi; j++) {
-      if (data[j] < pivot) {
-        var temp = data[i];
-        data[i] = data[j];
-        data[j] = temp;
-        i++;
-      }
-    }
-    var temp = data[i];
-    data[i] = pivot;
-    data[hi] = temp;
-    return i;
-  }
-}
-
 function setSortType () {
   return {
-    insertion: ((getWidth() / 3) / 2),
-    merge: (getWidth() / 2),
-    quick: (getWidth() - ((getWidth() / 3) / 2))
+    insertion: ((getWidth() / 4)),
+    merge: (getWidth() - (getWidth() / 4))
   };
 }
 
@@ -275,16 +195,10 @@ function resizeSvg () {
   sortType = setSortType();
   rectWidth = ((getWidth() - 20) / colorArr.length);
   svg.attr("width", getWidth());
-  svg.selectAll("line#left-line")
+  svg.selectAll("line")
     .attr("x1", sortType[currSortType])
     .attr("y1", 10)
-    .attr("x2", 10)
-    .attr("y2", 130)
-    .style("stroke", "black");
-  svg.selectAll("line#right-line")
-    .attr("x1", sortType[currSortType])
-    .attr("y1", 10)
-    .attr("x2", (getWidth() - 10))
+    .attr("x2", (getWidth() / 2))
     .attr("y2", 130)
     .style("stroke", "black");
   svg.selectAll("rect")
